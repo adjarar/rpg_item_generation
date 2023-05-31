@@ -4,16 +4,18 @@ import os
 import requests
 from rembg import remove
 from upscale_utilities import *
+import discord
 
 
 def txt2img_generate(sd_url: str, prompts: json, output_dir_with_bg: str, output_dir_without_bg: str,
                      prefix: str, steps: int, batch_size: int, iterations: int):
-    for id, prompt in enumerate(prompts):
+    for prompt_number, prompt in enumerate(prompts):
         payload = {
             "steps": steps,
             "batch_size": batch_size,
             "n_iter": iterations,
             "prompt": prompt,
+            "negative_prompt": "text signature",
             "sampler_name": "Euler a",
         }
 
@@ -25,11 +27,11 @@ def txt2img_generate(sd_url: str, prompts: json, output_dir_with_bg: str, output
                 break
 
             decoded_img = decode_img(encoded_img)
-            output_file = os.path.join(output_dir_with_bg, "_".join([prefix, str(id), str(i),'.png']))
+            output_file = os.path.join(output_dir_with_bg, "_".join([prefix, str(prompt_number), str(i)])) + '.png'
             decoded_img.save(output_file)
 
             bg_removed_img = remove(decoded_img)
-            output_file = os.path.join(output_dir_without_bg, "_".join([prefix, str(id), str(i),'no_bg', '.png']))
+            output_file = os.path.join(output_dir_without_bg, "_".join([prefix, str(prompt_number), str(i),'no_bg'])) +  '.png'
             bg_removed_img.save(output_file)
 
 
@@ -53,3 +55,6 @@ if __name__ == "__main__":
 
     txt2img_generate(args.sd_url, prompts, args.output_dir_with_bg, args.output_dir_without_bg,
                      args.prefix, args.steps, args.batch_size, args.iterations)
+    
+    webhook = discord.SyncWebhook.partial(1108891310351470662, '5Q-A_WqDX7Iiu6Y30oyifxGHdfL2PeErrW0MWA5kFjRTcGXbMv_Sv6NmtXhIwiOX0hf_')
+    webhook.send('Finnished generating images', username='Potion Generator')
