@@ -30,9 +30,9 @@ def txt2img_generate(sd_url: str, prompts: json, output_dir_with_bg: str, output
             output_file = os.path.join(output_dir_with_bg, "_".join([prefix, str(prompt_number), str(i)])) + '.png'
             decoded_img.save(output_file)
 
-            bg_removed_img = remove(decoded_img)
-            output_file = os.path.join(output_dir_without_bg, "_".join([prefix, str(prompt_number), str(i),'no_bg'])) +  '.png'
-            bg_removed_img.save(output_file)
+            #bg_removed_img = remove(decoded_img)
+            #output_file = os.path.join(output_dir_without_bg, "_".join([prefix, str(prompt_number), str(i),'no_bg'])) +  '.png'
+            #bg_removed_img.save(output_file)
 
 
 if __name__ == "__main__":
